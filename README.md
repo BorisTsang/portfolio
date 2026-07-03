@@ -1,7 +1,9 @@
 # Boris Tsang — portfolio
 
-A static portfolio + CTF writeups site. No build step, no framework. Plain
-HTML/CSS/JS you can host on anything (GitHub Pages, Netlify, an S3 bucket).
+Personal portfolio + CTF writeups site — [boristsang.com](https://boristsang.com).
+
+A static site with no build step and no framework: plain HTML/CSS/JS you can
+host on anything (GitHub Pages, Netlify, an S3 bucket).
 
 ## Run it locally
 
