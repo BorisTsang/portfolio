@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writeup — Boris Tsang</title>
+<meta name="description" content="A CTF writeup from Boris Tsang.">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta property="og:type" content="article">
+<meta property="og:image" content="og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.art-wrap{max-width:var(--measure-read);margin:0 auto;padding:var(--s-8) var(--section-x) var(--s-10);}
+.art-back{text-decoration:none;font:600 var(--t-xs)/1 'IBM Plex Mono',monospace;color:var(--ink-2);display:inline-flex;align-items:center;gap:var(--s-2);margin-bottom:var(--s-7);animation:heroIn .5s ease both;transition:color .2s;}
+.art-back:hover{color:var(--accent);}
+.art-body{animation:heroIn .6s ease both;}
+.art-meta{display:flex;align-items:center;gap:var(--s-3);margin-bottom:var(--s-5);flex-wrap:wrap;}
+.art-tag{font:600 var(--t-2xs) 'IBM Plex Mono',monospace;padding:var(--s-1) var(--s-3);border-radius:6px;}
+.art-mono{font:var(--t-2xs) 'IBM Plex Mono',monospace;color:var(--ink-3);}
+.art-dot{font:var(--t-2xs) 'IBM Plex Mono',monospace;color:var(--hair);}
+.art-h1{font:800 var(--t-h1)/1.1 Manrope,sans-serif;letter-spacing:-.03em;margin:0 0 var(--s-4);color:var(--ink);text-wrap:balance;}
+.art-ctf{display:flex;align-items:center;gap:var(--s-2);font:500 var(--t-xs)/1 'IBM Plex Mono',monospace;color:var(--ink-3);padding-bottom:var(--s-6);margin-bottom:var(--s-8);border-bottom:1px solid var(--hair);}
+.art-ctf .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+.art-loading{font:var(--t-sm) 'IBM Plex Mono',monospace;color:var(--ink-3);padding:var(--s-7) 0;}
+.art-loading .cursor{animation:heroIn 1s infinite alternate;}
+.art-err h2{font:700 var(--t-h3) Manrope,sans-serif;margin:0 0 var(--s-3);color:var(--ink);}
+.art-err p{font:400 var(--t-sm)/1.6 Manrope,sans-serif;color:var(--ink-2);margin:0 0 var(--s-5);}
+.art-err a{text-decoration:none;font:600 var(--t-sm) Manrope,sans-serif;color:var(--accent);}
+
+/* Long-form reading rhythm: ~68ch measure, headings get room above */
+.md{font:400 var(--t-body)/1.72 Manrope,sans-serif;color:var(--ink);}
+.md h2{font:700 var(--t-h3)/1.3 Manrope,sans-serif;letter-spacing:-.02em;color:var(--ink);margin:var(--s-8) 0 var(--s-4);text-wrap:balance;}
+.md h3{font:700 var(--t-lg)/1.35 Manrope,sans-serif;letter-spacing:-.01em;color:var(--ink);margin:var(--s-7) 0 var(--s-3);}
+.md p{margin:0 0 var(--s-5);}
+.md a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent);}
+.md a:hover{border-bottom-color:var(--accent);}
+.md strong{font-weight:700;color:var(--ink);}
+.md ul,.md ol{margin:0 0 var(--s-5);padding-left:var(--s-5);}
+.md li{margin:0 0 var(--s-2);}
+.md li::marker{color:var(--ink-3);}
+.md code{font:500 .88em 'IBM Plex Mono',monospace;background:var(--hair-2);color:light-dark(#c0392b,#ff9b8a);padding:.12em .4em;border-radius:5px;}
+.md pre{background:#161a20;border:1px solid var(--hair);border-radius:var(--radius-sm);padding:var(--s-5);overflow-x:auto;margin:0 0 var(--s-6);}
+.md pre code{display:block;background:none;color:#d7dbe3;padding:0;font:500 var(--t-xs)/1.7 'IBM Plex Mono',monospace;}
+.md blockquote{margin:0 0 var(--s-6);padding:var(--s-1) var(--s-5);border-left:3px solid var(--accent);color:var(--ink-2);font-style:italic;}
+.md hr{border:none;border-top:1px solid var(--hair);margin:var(--s-8) 0;}
+@media(max-width:640px){.md h2{font-size:var(--t-lg);}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="index.html"><b>Boris Tsang</b><span>/ writeups</span></a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#project">Projects</a>
+    <a href="writeups.html">Writeups</a>
+    <a href="writeups.html#contact">Contact</a>
+    <button class="theme-btn" title="Toggle theme"></button>
+  </div>
+</nav>
+
+<div class="art-wrap">
+  <a class="art-back" href="writeups.html">&larr; cd ~/writeups</a>
+  <div id="article">
+    <div class="art-loading">$ cat writeup.md<span class="cursor">_</span></div>
+  </div>
+</div>
+
+<script src="assets/theme.js"></script>
+<script src="assets/markdown.js"></script>
+<script src="writeups/posts.js"></script>
+<script>
+(function () {
+  var tagColors = window.TAG_COLORS;
+
+  function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+
+  function tagStyle(tag) {
+    var tc = tagColors[tag] || tagColors.misc;
+    var dark = isDark();
+    return 'color:' + (dark ? tc.dfg : tc.lfg) + ';background:' + (dark ? tc.dbg : tc.lbg) + ';';
+  }
+
+  function slug() {
+    try {
+      var q = new URLSearchParams(window.location.search);
+      return (q.get('slug') || '').replace(/[^a-z0-9\-]/gi, '');
+    } catch (e) { return ''; }
+  }
+
+  function showError(msg) {
+    document.getElementById('article').innerHTML =
+      '<div class="art-err"><h2>Writeup not found</h2><p>' + msg + '</p>' +
+      '<a href="writeups.html">&larr; Back to all writeups</a></div>';
+  }
+
+  function render(meta, body) {
+    var html = MD.render(body);
+    document.getElementById('article').innerHTML =
+      '<div class="art-body"><div class="art-meta">' +
+        '<span class="art-tag" style="' + tagStyle(meta.tag) + '">' + (meta.tag || '') + '</span>' +
+        '<span class="art-mono">' + (meta.date || '') + '</span>' +
+        (meta.read ? '<span class="art-dot">·</span><span class="art-mono">' + meta.read + '</span>' : '') +
+      '</div>' +
+      '<h1 class="art-h1">' + (meta.title || 'Untitled') + '</h1>' +
+      '<div class="art-ctf"><span class="dot"></span>' + (meta.ctf || '') + '</div>' +
+      '<div class="md">' + html + '</div></div>';
+    if (meta.title) document.title = meta.title + ' — Boris Tsang';
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var s = slug();
+    if (!s) { showError('No writeup was specified.'); return; }
+    fetch('writeups/' + s + '.md')
+      .then(function (r) { if (!r.ok) throw new Error('missing'); return r.text(); })
+      .then(function (text) {
+        var parsed = MD.parseFrontMatter(text);
+        render(parsed.meta, parsed.body);
+      })
+      .catch(function () {
+        showError('Couldn\'t load "' + s + '". It may not exist yet, or you may need to serve this over http:// (see README).');
+      });
+  });
+})();
+</script>
+</body>
+</html>

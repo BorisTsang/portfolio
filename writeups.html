@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writeups — Boris Tsang</title>
+<meta name="description" content="CTF writeups, security notes, and build logs from Boris Tsang.">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Writeups — Boris Tsang">
+<meta property="og:description" content="CTF writeups, security notes, and build logs from Boris Tsang.">
+<meta property="og:image" content="og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.wu-page{max-width:var(--measure-read);margin:0 auto;padding:0 var(--section-x);}
+.wu-head{padding-top:var(--s-9);padding-bottom:var(--s-6);}
+.wu-cmd{font:600 var(--t-2xs)/1 'IBM Plex Mono',monospace;color:var(--accent);animation:heroIn .6s ease both;}
+.wu-title{font:800 var(--t-h1)/1.05 Manrope,sans-serif;letter-spacing:-.03em;margin:var(--s-4) 0 0;animation:heroIn .6s ease .08s both;}
+.wu-sub{font:400 var(--t-body)/1.55 Manrope,sans-serif;color:var(--ink-2);max-width:52ch;margin:var(--s-4) 0 0;animation:heroIn .6s ease .16s both;}
+.wu-filters{padding-top:var(--s-2);display:flex;gap:var(--s-2);flex-wrap:wrap;animation:heroIn .6s ease .22s both;}
+.wu-filter{font:600 var(--t-xs)/1 Manrope,sans-serif;border:none;cursor:pointer;padding:var(--s-2) var(--s-4);border-radius:100px;transition:box-shadow .25s,transform .25s,background .25s;background:var(--hair-2);color:var(--ink-2);}
+.wu-filter:hover{transform:translateY(-2px);}
+.wu-filter.on{background:var(--ink);color:var(--bg);}
+.wu-list{padding-top:var(--s-6);padding-bottom:var(--s-10);display:flex;flex-direction:column;gap:var(--s-3);}
+.wu-card{
+  animation:revealUp linear both;animation-timeline:view();animation-range:entry 0% entry 65%;
+  transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .35s ease,border-color .35s ease;
+  text-decoration:none;color:inherit;display:block;padding:var(--s-5);
+  border:1px solid var(--hair);border-radius:var(--radius);background:var(--surface);
+}
+.wu-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.1);}
+.wu-meta{display:flex;align-items:center;gap:var(--s-3);margin-bottom:var(--s-4);}
+.wu-tag{font:600 var(--t-2xs) 'IBM Plex Mono',monospace;padding:var(--s-1) var(--s-3);border-radius:6px;}
+.wu-date{font:var(--t-2xs) 'IBM Plex Mono',monospace;color:var(--ink-3);}
+.wu-card h2{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font:700 var(--t-h3)/1.25 Manrope,sans-serif;letter-spacing:-.02em;margin:0;color:var(--ink);}
+.wu-desc{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font:400 var(--t-sm)/1.55 Manrope,sans-serif;color:var(--ink-2);margin-top:var(--s-2);}
+.wu-foot{display:flex;align-items:center;justify-content:space-between;margin-top:var(--s-5);padding-top:var(--s-4);border-top:1px solid var(--hair);}
+.wu-ctf{font:var(--t-2xs) 'IBM Plex Mono',monospace;color:var(--ink-3);}
+.wu-arrow{color:var(--ink-3);font:var(--t-sm) Manrope,sans-serif;display:inline-block;transition:transform .3s cubic-bezier(.34,1.56,.64,1),color .3s ease;}
+.wu-card:hover .wu-arrow{transform:translateX(5px);color:var(--accent);}
+.wu-empty{padding:var(--s-7) 0;text-align:center;font:var(--t-xs) 'IBM Plex Mono',monospace;color:var(--ink-3);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="index.html"><b>Boris Tsang</b><span>/ writeups</span></a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#project">Projects</a>
+    <span class="active">Writeups</span>
+    <a href="#contact">Contact</a>
+    <button class="theme-btn" title="Toggle theme"></button>
+  </div>
+</nav>
+
+<div class="wu-page wu-head">
+  <div class="wu-cmd">$ ls ~/writeups</div>
+  <h1 class="wu-title">Writeups</h1>
+  <p class="wu-sub">CTF writeups, security notes, and build logs. Long-form, no fluff.</p>
+</div>
+
+<div class="wu-page wu-filters" id="filters"></div>
+
+<div class="wu-page wu-list" id="list"></div>
+
+<div class="contact" id="contact">
+  <div class="contact-label">Contact</div>
+  <div class="contact-icons">
+    <a href="https://github.com/BorisTsang" target="_blank" title="GitHub"><img src="https://cdn.simpleicons.org/github/3b6fd6" alt="GitHub" style="width:22px;height:22px"></a>
+    <a href="https://x.com/BorisTsang622" target="_blank" title="X"><img src="https://cdn.simpleicons.org/x/3b6fd6" alt="X" style="width:20px;height:20px"></a>
+    <a href="mailto:boris@boristsang.com" title="Email"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3b6fd6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></a>
+  </div>
+  <div class="contact-copy">© 2026 Boris Tsang · Hong Kong</div>
+</div>
+
+<script src="assets/theme.js"></script>
+<script src="writeups/posts.js"></script>
+<script>
+(function () {
+  var posts = window.POSTS || [];
+  var tagColors = window.TAG_COLORS;
+  var filter = 'all';
+
+  function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+
+  function tagStyle(tag) {
+    var tc = tagColors[tag] || tagColors.misc;
+    var dark = isDark();
+    return 'color:' + (dark ? tc.dfg : tc.lfg) + ';background:' + (dark ? tc.dbg : tc.lbg) + ';';
+  }
+
+  function counts() {
+    var c = { all: posts.length };
+    posts.forEach(function (p) { c[p.tag] = (c[p.tag] || 0) + 1; });
+    return c;
+  }
+
+  function renderFilters() {
+    var c = counts();
+    var el = document.getElementById('filters');
+    el.innerHTML = '';
+    ['all', 'pwn', 'web', 'rev'].forEach(function (t) {
+      var b = document.createElement('button');
+      b.className = 'wu-filter' + (t === filter ? ' on' : '');
+      b.textContent = (t === 'all' ? 'All' : t) + ' (' + (c[t] || 0) + ')';
+      b.addEventListener('click', function () { filter = t; render(); });
+      el.appendChild(b);
+    });
+  }
+
+  function renderList() {
+    var el = document.getElementById('list');
+    var shown = posts.filter(function (p) { return filter === 'all' || p.tag === filter; });
+    if (!shown.length) {
+      el.innerHTML = '<div class="wu-empty">no posts in this category yet</div>';
+      return;
+    }
+    el.innerHTML = shown.map(function (p) {
+      return '<a class="wu-card" href="article.html?slug=' + encodeURIComponent(p.slug) + '">' +
+        '<div class="wu-meta"><span class="wu-tag" style="' + tagStyle(p.tag) + '">' + p.tag + '</span>' +
+        '<span class="wu-date">' + p.date + '</span></div>' +
+        '<h2>' + p.title + '</h2>' +
+        '<div class="wu-desc">' + p.desc + '</div>' +
+        '<div class="wu-foot"><span class="wu-ctf">' + p.ctf + '</span><span class="wu-arrow">&rarr;</span></div>' +
+        '</a>';
+    }).join('');
+  }
+
+  function render() { renderFilters(); renderList(); }
+  document.addEventListener('DOMContentLoaded', render);
+  // Re-tint tags when the theme toggles.
+  new MutationObserver(function () { renderList(); }).observe(
+    document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+</script>
+</body>
+</html>
