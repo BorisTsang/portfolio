@@ -88,7 +88,9 @@
 .scroll-cue svg{animation:cueBob 1.8s ease-in-out infinite;}
 html.scrolled .scroll-cue{opacity:0;pointer-events:none;}
 
-.term-wrap{position:relative;animation:heroIn .8s ease .3s both;}
+/* min-width:0 caps the grid track: without it, unwrappable terminal output
+   (long words, ascii art) inflates the column and stretches the terminal. */
+.term-wrap{position:relative;animation:heroIn .8s ease .3s both;min-width:0;}
 .term{transform:perspective(1100px);transform-style:preserve-3d;transition:transform .5s cubic-bezier(.16,1,.3,1);background:#1d1d1f;border-radius:var(--radius);box-shadow:0 24px 60px rgba(0,0,0,.28);overflow:hidden;}
 .term-bar{height:38px;display:flex;align-items:center;gap:var(--s-2);padding:0 var(--s-4);background:#2c2c2e;}
 .term-dot{width:11px;height:11px;border-radius:50%;}
@@ -116,7 +118,7 @@ pre.nf-art{margin:2px 0 0;font:11px/1.25 'IBM Plex Mono',monospace;color:#8db2f5
   font:inherit;color:#e8e8ed;caret-color:#8db2f5;
 }
 .term-prompt input::placeholder{color:#5b5b60;}
-#termOut pre{margin:0 0 var(--s-2);}
+#termOut pre{margin:0 0 var(--s-2);overflow-x:auto;scrollbar-width:thin;scrollbar-color:#3a3a3e transparent;}
 #termOut .nf{margin:var(--s-2) 0 var(--s-3);}
 /* Command art: tighter line-height than prose output. pre.* to outrank the
    `.term-body pre` base rule. */
