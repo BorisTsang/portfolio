@@ -95,7 +95,7 @@ html.scrolled .scroll-cue{opacity:0;pointer-events:none;}
 .term-bar{height:38px;display:flex;align-items:center;gap:var(--s-2);padding:0 var(--s-4);background:#2c2c2e;}
 .term-dot{width:11px;height:11px;border-radius:50%;}
 .term-title{font:500 var(--t-2xs)/1 'IBM Plex Mono',monospace;color:#8e8e93;margin-left:var(--s-2);}
-.term-body{padding:var(--s-5);height:400px;overflow-y:auto;}
+.term-body{padding:var(--s-5);height:400px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#3a3a3e transparent;}
 .term-body pre{margin:0;white-space:pre-wrap;font:var(--t-xs)/1.75 'IBM Plex Mono',monospace;color:#e8e8ed;}
 .term-cursor{animation:blinkCursor 1s steps(1) infinite;color:#8db2f5;}
 /* Donut canvas: tight line-height so a mono cell is ~2:1 (h:w), matching the
