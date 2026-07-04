@@ -123,34 +123,181 @@
       if (heroActive) { heroActive = false; resetHero(); }
     });
 
-    // ── Terminal: type the history, then print a personal neofetch ─────
-    var lines = [
-      '$ whoami',
-      'boris — full-stack · embedded · games · security',
-      '$ neofetch'
-    ];
-    var full = lines.join('\n');
+    // ── Terminal: a tiny working zsh ────────────────────────────────────
+    // Boot order mirrors a real shell: neofetch fires from the rc file, then
+    // "you" type whoami, then the prompt is live — type `ls` and explore.
+    var termBody = document.getElementById('termBody');
+    var nfEl = document.getElementById('neofetch');
     var typedEl = document.getElementById('typed');
-    var i = 0;
-    var typer = setInterval(function () {
-      i += 1;
-      typedEl.textContent = full.slice(0, i);
-      if (i >= full.length) {
-        clearInterval(typer);
-        showNeofetch();
-      }
-    }, 24);
+    var outEl = document.getElementById('termOut');
+    var promptEl = document.getElementById('termPrompt');
+    var inputEl = document.getElementById('termInput');
+    var WHOAMI = 'boris — full-stack · embedded · games · security';
 
-    // The "output" appears all at once (like the real thing), the cursor
-    // stops blinking on the neofetch line and a fresh prompt appears below —
-    // the whole session history stays visible.
-    function showNeofetch() {
-      setTimeout(function () {
-        document.getElementById('typedCursor').style.display = 'none';
-        document.getElementById('neofetch').style.display = '';
-        document.getElementById('promptNext').style.display = '';
-      }, 400);
+    function scrollTerm() { termBody.scrollTop = termBody.scrollHeight; }
+
+    setTimeout(function () {
+      nfEl.style.display = '';
+      var full = '$ whoami\n' + WHOAMI;
+      var i = 0;
+      var typer = setInterval(function () {
+        i += 1;
+        typedEl.textContent = full.slice(0, i);
+        if (i >= full.length) {
+          clearInterval(typer);
+          document.getElementById('typedCursor').style.display = 'none';
+          promptEl.style.display = '';
+          scrollTerm();
+        }
+      }, 24);
+    }, 500);
+
+    function print(text, cls) {
+      var p = document.createElement('pre');
+      if (cls) p.className = cls;
+      p.textContent = text;
+      outEl.appendChild(p);
+      scrollTerm();
+      return p;
     }
+
+    var HELP = [
+      'available commands',
+      '',
+      '  ls              list files',
+      '  cat <file>      print a file',
+      '  neofetch        about me',
+      '  whoami          the one-liner',
+      '  cowsay <msg>    wisdom from a cow',
+      '  donut           donut.c, the classic',
+      '  echo <msg>      say it back',
+      '  clear           wipe the screen'
+    ].join('\n');
+
+    function cowsay(msg) {
+      var words = (msg || 'moo').split(/\s+/);
+      var lines = [], cur = '';
+      words.forEach(function (w) {
+        if ((cur + ' ' + w).trim().length > 28 && cur) { lines.push(cur.trim()); cur = w; }
+        else cur = (cur + ' ' + w).trim();
+      });
+      if (cur) lines.push(cur);
+      var wmax = Math.max.apply(null, lines.map(function (l) { return l.length; }));
+      var bubble = lines.map(function (l, idx) {
+        var pad = l + new Array(wmax - l.length + 1).join(' ');
+        if (lines.length === 1) return '< ' + pad + ' >';
+        var lb = idx === 0 ? '/' : idx === lines.length - 1 ? '\\' : '|';
+        var rb = idx === 0 ? '\\' : idx === lines.length - 1 ? '/' : '|';
+        return lb + ' ' + pad + ' ' + rb;
+      });
+      return [' ' + new Array(wmax + 3).join('_')]
+        .concat(bubble, [' ' + new Array(wmax + 3).join('-')], [
+          '        \\   ^__^',
+          '         \\  (oo)\\_______',
+          '            (__)\\       )\\/\\',
+          '                ||----w |',
+          '                ||     ||'
+        ]).join('\n');
+    }
+
+    // donut.c as a command. One donut at a time; `clear` stops it.
+    var donutTimer = null;
+    function donut() {
+      var pre = print('', 't-donut');
+      var W = 40, H = 16;
+      var SHADES = '.,-~:;=!*#$@';
+      var R1 = 1, R2 = 2, K2 = 5;
+      var K1 = W * K2 * 3 / (8 * (R1 + R2));
+      var A = 1.0, B = 0.4;
+      function frame() {
+        var buf = new Array(W * H).fill(' ');
+        var zbuf = new Array(W * H).fill(0);
+        var cA = Math.cos(A), sA = Math.sin(A), cB = Math.cos(B), sB = Math.sin(B);
+        for (var th = 0; th < 6.28; th += 0.07) {
+          var ct = Math.cos(th), st = Math.sin(th);
+          for (var ph = 0; ph < 6.28; ph += 0.02) {
+            var cp = Math.cos(ph), sp = Math.sin(ph);
+            var circx = R2 + R1 * ct, circy = R1 * st;
+            var x = circx * (cB * cp + sA * sB * sp) - circy * cA * sB;
+            var y = circx * (sB * cp - sA * cB * sp) + circy * cA * cB;
+            var ooz = 1 / (circx * cA * sp + circy * sA + K2);
+            var xp = Math.floor(W / 2 + K1 * ooz * x);
+            var yp = Math.floor(H / 2 - K1 * 0.5 * ooz * y);
+            if (xp < 0 || xp >= W || yp < 0 || yp >= H) continue;
+            var idx = yp * W + xp;
+            if (ooz <= zbuf[idx]) continue;
+            var L = cp * ct * sB - cA * ct * sp - sA * st + cB * (cA * st - ct * sA * sp);
+            zbuf[idx] = ooz;
+            buf[idx] = SHADES[Math.max(0, Math.round(L * 8))] || '.';
+          }
+        }
+        var rows = [];
+        for (var r = 0; r < H; r += 1) rows.push(buf.slice(r * W, (r + 1) * W).join(''));
+        pre.textContent = rows.join('\n');
+      }
+      frame();
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (donutTimer) clearInterval(donutTimer);
+      donutTimer = setInterval(function () { A += 0.07; B += 0.03; frame(); }, 50);
+    }
+
+    function run(raw) {
+      print('$ ' + raw);
+      var cmd = raw.trim();
+      if (!cmd) return;
+      var name = cmd.split(/\s+/)[0];
+      var rest = cmd.slice(name.length).trim();
+      switch (name) {
+        case 'ls': print('commands.txt  cowsay  donut  neofetch  whoami'); break;
+        case 'cat':
+          if (rest === 'commands.txt') print(HELP);
+          else print('cat: ' + (rest || '') + ': No such file or directory');
+          break;
+        case 'help': print(HELP); break;
+        case 'neofetch':
+          var c = nfEl.cloneNode(true);
+          c.removeAttribute('id');
+          c.style.display = '';
+          outEl.appendChild(c);
+          scrollTerm();
+          break;
+        case 'whoami': print(WHOAMI); break;
+        case 'cowsay': print(cowsay(rest), 't-art'); break;
+        case 'donut': donut(); break;
+        case 'echo': print(rest); break;
+        case 'clear':
+          if (donutTimer) { clearInterval(donutTimer); donutTimer = null; }
+          outEl.innerHTML = '';
+          nfEl.style.display = 'none';
+          document.getElementById('typedWrap').style.display = 'none';
+          break;
+        case 'sudo': print('nice try.'); break;
+        case 'exit': print('there is no escape.'); break;
+        default: print('zsh: command not found: ' + name + '\n(hint: cat commands.txt)');
+      }
+    }
+
+    // Enter runs; ↑/↓ walk history — the little things that make it feel real.
+    var hist = [], histAt = -1;
+    inputEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        var v = inputEl.value;
+        if (v.trim()) { hist.push(v); }
+        histAt = hist.length;
+        inputEl.value = '';
+        inputEl.placeholder = '';
+        run(v);
+      } else if (e.key === 'ArrowUp') {
+        if (histAt > 0) { histAt -= 1; inputEl.value = hist[histAt]; e.preventDefault(); }
+      } else if (e.key === 'ArrowDown') {
+        if (histAt < hist.length - 1) { histAt += 1; inputEl.value = hist[histAt]; }
+        else { histAt = hist.length; inputEl.value = ''; }
+      }
+    });
+    // Click anywhere in the terminal to focus the prompt (unless selecting text).
+    termBody.addEventListener('click', function () {
+      if (!String(getSelection()).length) inputEl.focus({ preventScroll: true });
+    });
 
     // ── Stack section ─────────────────────────────────────────────────
     // Each row/tile carries a --i index for a staggered scroll-reveal, and

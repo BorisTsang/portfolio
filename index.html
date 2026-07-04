@@ -65,8 +65,7 @@
         <div class="term-dot" style="background:#4ade80"></div>
         <div class="term-title">boris@hk — zsh</div>
       </div>
-      <div class="term-body">
-        <pre><span id="typed"></span><span class="term-cursor" id="typedCursor">▌</span></pre>
+      <div class="term-body" id="termBody">
         <div id="neofetch" style="display:none">
           <div class="nf">
             <pre class="nf-art">██████╗ ████████╗
@@ -89,7 +88,9 @@
             </div>
           </div>
         </div>
-        <pre id="promptNext" style="display:none">$ <span class="term-cursor">▌</span></pre>
+        <pre id="typedWrap"><span id="typed"></span><span class="term-cursor" id="typedCursor">▌</span></pre>
+        <div id="termOut"></div>
+        <pre class="term-prompt" id="termPrompt" style="display:none">$ <input id="termInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type a command — try: ls" aria-label="Terminal input"></pre>
       </div>
     </div>
   </div>

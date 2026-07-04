@@ -109,6 +109,19 @@ pre.nf-art{margin:2px 0 0;font:11px/1.25 'IBM Plex Mono',monospace;color:#8db2f5
 .nf-pal{margin-top:var(--s-3);display:flex;gap:4px;}
 .nf-pal span{width:14px;height:14px;border-radius:3px;}
 @media(max-width:520px){.nf{flex-direction:column;gap:var(--s-4);}}
+/* Live prompt: a real <input> styled to disappear into the terminal. */
+.term-prompt{display:flex;align-items:center;}
+.term-prompt input{
+  flex:1;min-width:0;background:none;border:0;outline:0;padding:0;
+  font:inherit;color:#e8e8ed;caret-color:#8db2f5;
+}
+.term-prompt input::placeholder{color:#5b5b60;}
+#termOut pre{margin:0 0 var(--s-2);}
+#termOut .nf{margin:var(--s-2) 0 var(--s-3);}
+/* Command art: tighter line-height than prose output. pre.* to outrank the
+   `.term-body pre` base rule. */
+pre.t-art{font:var(--t-2xs)/1.35 'IBM Plex Mono',monospace;color:#e8e8ed;white-space:pre;}
+pre.t-donut{font:10px/1.15 'IBM Plex Mono',monospace;color:#9bb4e0;white-space:pre;}
 
 /* Section label = shared eyebrow token */
 .sec-label{font:600 var(--t-xs)/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);}
