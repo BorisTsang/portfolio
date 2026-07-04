@@ -96,9 +96,19 @@ html.scrolled .scroll-cue{opacity:0;pointer-events:none;}
 .term-body{padding:var(--s-5);height:400px;overflow-y:auto;}
 .term-body pre{margin:0;white-space:pre-wrap;font:var(--t-xs)/1.75 'IBM Plex Mono',monospace;color:#e8e8ed;}
 .term-cursor{animation:blinkCursor 1s steps(1) infinite;color:#8db2f5;}
-.board{margin:var(--s-4) 0 0;font:var(--t-sm)/1.6 'IBM Plex Mono',monospace;color:#9bb4e0;letter-spacing:4px;}
-.board-move{font:var(--t-2xs)/1 'IBM Plex Mono',monospace;color:#8e8e93;margin-top:var(--s-3);}
-.board-soon{font:var(--t-2xs)/1.7 'IBM Plex Mono',monospace;color:#5b5b60;margin-top:var(--s-4);}
+/* Donut canvas: tight line-height so a mono cell is ~2:1 (h:w), matching the
+   0.5 y-scale in the projection — otherwise the torus renders squashed. */
+/* Neofetch card: ASCII logo + about-me fields, terminal-style. The art pre
+   needs pre.nf-art to outrank the `.term-body pre` base rule. */
+.nf{display:flex;gap:var(--s-5);align-items:flex-start;margin-top:var(--s-4);}
+pre.nf-art{margin:2px 0 0;font:11px/1.25 'IBM Plex Mono',monospace;color:#8db2f5;white-space:pre;flex:none;}
+.nf-info{font:var(--t-2xs)/1.8 'IBM Plex Mono',monospace;color:#e8e8ed;min-width:0;}
+.nf-title{color:#8db2f5;font-weight:600;}
+.nf-sep{color:#5b5b60;}
+.nf-k{color:#8db2f5;font-weight:600;}
+.nf-pal{margin-top:var(--s-3);display:flex;gap:4px;}
+.nf-pal span{width:14px;height:14px;border-radius:3px;}
+@media(max-width:520px){.nf{flex-direction:column;gap:var(--s-4);}}
 
 /* Section label = shared eyebrow token */
 .sec-label{font:600 var(--t-xs)/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);}

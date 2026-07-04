@@ -123,12 +123,11 @@
       if (heroActive) { heroActive = false; resetHero(); }
     });
 
-    // ── Terminal typing + wandering knight ────────────────────────────
+    // ── Terminal: type the history, then print a personal neofetch ─────
     var lines = [
       '$ whoami',
       'boris — full-stack · embedded · games · security',
-      '$ ./serendipity_chess --demo',
-      'engine ready. knight wandering…'
+      '$ neofetch'
     ];
     var full = lines.join('\n');
     var typedEl = document.getElementById('typed');
@@ -138,38 +137,19 @@
       typedEl.textContent = full.slice(0, i);
       if (i >= full.length) {
         clearInterval(typer);
-        startBoard();
+        showNeofetch();
       }
     }, 24);
 
-    function startBoard() {
-      var wrap = document.getElementById('boardWrap');
-      var boardEl = document.getElementById('board');
-      var moveEl = document.getElementById('boardMove');
-      wrap.style.display = '';
-      var files = 'abcdefgh';
-      var knight = { r: 7, c: 1 };
-      var moveCount = 0;
-      function draw() {
-        var rows = [];
-        for (var r = 0; r < 8; r += 1) {
-          var cells = [];
-          for (var c = 0; c < 8; c += 1) cells.push(r === knight.r && c === knight.c ? '♞' : '·');
-          rows.push(cells.join(' '));
-        }
-        boardEl.textContent = rows.join('\n');
-        moveEl.textContent = 'move ' + moveCount + ' · N' + files[knight.c] + (8 - knight.r);
-      }
-      draw();
-      setInterval(function () {
-        var deltas = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
-        var moves = deltas
-          .map(function (d) { return { r: knight.r + d[0], c: knight.c + d[1] }; })
-          .filter(function (m) { return m.r >= 0 && m.r < 8 && m.c >= 0 && m.c < 8; });
-        knight = moves[Math.floor(Math.random() * moves.length)];
-        moveCount += 1;
-        draw();
-      }, 900);
+    // The "output" appears all at once (like the real thing), the cursor
+    // stops blinking on the neofetch line and a fresh prompt appears below —
+    // the whole session history stays visible.
+    function showNeofetch() {
+      setTimeout(function () {
+        document.getElementById('typedCursor').style.display = 'none';
+        document.getElementById('neofetch').style.display = '';
+        document.getElementById('promptNext').style.display = '';
+      }, 400);
     }
 
     // ── Stack section ─────────────────────────────────────────────────
