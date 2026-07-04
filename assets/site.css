@@ -14,7 +14,7 @@
   --section-y:112px;         /* vertical padding between sections   */
   --section-x:40px;          /* page gutter                          */
   --measure:960px;           /* content column                       */
-  --measure-read:680px;      /* long-form reading column             */
+  --measure-read:820px;      /* long-form reading column             */
   --radius:18px;
   --radius-sm:12px;
 
@@ -36,22 +36,8 @@
 
   color-scheme:light;
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0e1013; --surface:#161a20;
-    --ink:#e8e8ed; --ink-2:#a3a8b0; --ink-3:#6f757e;
-    --hair:#262b32; --hair-2:#20242b;
-    --accent:#7aa5f2; --accent-strong:#8fb4f6; --accent-soft:#1a2740;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="light"]{
-  --bg:#fbfbfa; --surface:#ffffff;
-  --ink:#1d1d1f; --ink-2:#5f5f66; --ink-3:#8a8a90;
-  --hair:#eae8e3; --hair-2:#f2f1ee;
-  --accent:#3b6fd6; --accent-strong:#2c5bb8; --accent-soft:#e7eefc;
-  color-scheme:light;
-}
+/* Dark redefines tokens only — components never change. theme.js (in <head>)
+   stamps data-theme before first paint; without JS the site stays light. */
 :root[data-theme="dark"]{
   --bg:#0e1013; --surface:#161a20;
   --ink:#e8e8ed; --ink-2:#a3a8b0; --ink-3:#6f757e;
@@ -79,6 +65,18 @@ body{
 @keyframes heroIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 @keyframes revealUp{from{opacity:0;transform:translateY(56px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
 @media(prefers-reduced-motion:reduce){*{animation:none !important;}}
+
+/* Scroll-reveal fallback — browsers without CSS scroll-driven animations
+   (Firefox, Safari) play the same reveal once per element instead: theme.js
+   stamps .no-st on <html>, then .in on each element as it scrolls into view.
+   Wrapped in no-preference so reduced-motion users never get hidden content. */
+@media(prefers-reduced-motion:no-preference){
+  html.no-st :is(.reveal-up,.reveal-left,.scroll-scale,.proj-card,.domain,.lang,.wcard,.wu-card){animation:none;opacity:0;}
+  html.no-st :is(.reveal-up,.reveal-left,.scroll-scale,.proj-card,.domain,.lang,.wcard,.wu-card).in{
+    animation:revealUp .7s cubic-bezier(.22,1,.36,1) both;
+    animation-delay:calc(var(--i,0) * .07s);
+  }
+}
 
 /* Focus ring — visible for keyboard users on every interactive element */
 a:focus-visible,button:focus-visible{
@@ -129,6 +127,24 @@ a:focus-visible,button:focus-visible{
 .contact-icons a{display:inline-flex;opacity:1;transition:opacity .2s,transform .2s;}
 .contact-icons a:hover{opacity:.55;transform:translateY(-2px);}
 .contact-copy{font:500 var(--t-2xs)/1 Manrope,sans-serif;color:var(--ink-3);}
+
+/* ── Bottom blur veil ──────────────────────────────────────────────────
+   Fixed gradient blur pinned to the bottom of the viewport: content softly
+   dissolves at the bottom edge, a gentle "there's more below" cue. It hides
+   itself when the page is scrolled to the very bottom (nothing left to hint
+   at) via the .at-end class set in theme.js. */
+.scroll-veil{
+  position:fixed;left:0;right:0;bottom:0;height:90px;z-index:40;
+  pointer-events:none;
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  -webkit-mask-image:linear-gradient(to top,#000 0%,#000 30%,transparent 100%);
+  mask-image:linear-gradient(to top,#000 0%,#000 30%,transparent 100%);
+  background:linear-gradient(to top,var(--bg) 0%,color-mix(in srgb,var(--bg) 55%,transparent) 45%,transparent 100%);
+  opacity:1;transition:opacity .4s ease;
+}
+.scroll-veil.at-end{opacity:0;}
+@media(prefers-reduced-motion:reduce){.scroll-veil{display:none;}}
 
 @media(max-width:820px){
   :root{--section-y:72px;--section-x:24px;}

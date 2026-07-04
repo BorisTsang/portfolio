@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
+<script src="assets/theme.js"></script>
 <style>
 .wu-page{max-width:var(--measure-read);margin:0 auto;padding:0 var(--section-x);}
 .wu-head{padding-top:var(--s-9);padding-bottom:var(--s-6);}
@@ -31,7 +32,7 @@
   text-decoration:none;color:inherit;display:block;padding:var(--s-5);
   border:1px solid var(--hair);border-radius:var(--radius);background:var(--surface);
 }
-.wu-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.1);}
+.wu-card:hover{border-color:var(--tc,var(--accent));transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.1);}
 .wu-meta{display:flex;align-items:center;gap:var(--s-3);margin-bottom:var(--s-4);}
 .wu-tag{font:600 var(--t-2xs) 'IBM Plex Mono',monospace;padding:var(--s-1) var(--s-3);border-radius:6px;}
 .wu-date{font:var(--t-2xs) 'IBM Plex Mono',monospace;color:var(--ink-3);}
@@ -47,7 +48,7 @@
 <body>
 
 <nav class="nav">
-  <a class="nav-brand" href="index.html"><b>Boris Tsang</b><span>/ writeups</span></a>
+  <a class="nav-brand" href="/"><b>Boris Tsang</b><span>/ writeups</span></a>
   <div class="nav-links">
     <a href="index.html#about">About</a>
     <a href="index.html#project">Projects</a>
@@ -67,31 +68,22 @@
 
 <div class="wu-page wu-list" id="list"></div>
 
-<div class="contact" id="contact">
+<footer class="contact" id="contact">
   <div class="contact-label">Contact</div>
   <div class="contact-icons">
     <a href="https://github.com/BorisTsang" target="_blank" title="GitHub"><img src="https://cdn.simpleicons.org/github/3b6fd6" alt="GitHub" style="width:22px;height:22px"></a>
     <a href="https://x.com/BorisTsang622" target="_blank" title="X"><img src="https://cdn.simpleicons.org/x/3b6fd6" alt="X" style="width:20px;height:20px"></a>
+    <a href="https://discord.com/users/1297489493238222981" target="_blank" title="Discord"><img src="https://cdn.simpleicons.org/discord/3b6fd6" alt="Discord" style="width:22px;height:22px"></a>
     <a href="mailto:boris@boristsang.com" title="Email"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3b6fd6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></a>
   </div>
   <div class="contact-copy">© 2026 Boris Tsang · Hong Kong</div>
-</div>
+</footer>
 
-<script src="assets/theme.js"></script>
 <script src="writeups/posts.js"></script>
 <script>
 (function () {
   var posts = window.POSTS || [];
-  var tagColors = window.TAG_COLORS;
   var filter = 'all';
-
-  function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
-
-  function tagStyle(tag) {
-    var tc = tagColors[tag] || tagColors.misc;
-    var dark = isDark();
-    return 'color:' + (dark ? tc.dfg : tc.lfg) + ';background:' + (dark ? tc.dbg : tc.lbg) + ';';
-  }
 
   function counts() {
     var c = { all: posts.length };
@@ -99,11 +91,20 @@
     return c;
   }
 
+  // Filter chips are derived from the tags actually present in POSTS (most
+  // common first), so adding a writeup with a new tag surfaces its chip with
+  // no edit here.
+  function tagsInUse() {
+    var c = counts();
+    return Object.keys(c).filter(function (t) { return t !== 'all'; })
+      .sort(function (a, b) { return c[b] - c[a] || (a < b ? -1 : 1); });
+  }
+
   function renderFilters() {
     var c = counts();
     var el = document.getElementById('filters');
     el.innerHTML = '';
-    ['all', 'pwn', 'web', 'rev'].forEach(function (t) {
+    ['all'].concat(tagsInUse()).forEach(function (t) {
       var b = document.createElement('button');
       b.className = 'wu-filter' + (t === filter ? ' on' : '');
       b.textContent = (t === 'all' ? 'All' : t) + ' (' + (c[t] || 0) + ')';
@@ -120,8 +121,9 @@
       return;
     }
     el.innerHTML = shown.map(function (p) {
-      return '<a class="wu-card" href="article.html?slug=' + encodeURIComponent(p.slug) + '">' +
-        '<div class="wu-meta"><span class="wu-tag" style="' + tagStyle(p.tag) + '">' + p.tag + '</span>' +
+      var tc = window.tagColor(p.tag);
+      return '<a class="wu-card" style="--tc:' + tc.fg + '" href="article.html?slug=' + encodeURIComponent(p.slug) + '">' +
+        '<div class="wu-meta"><span class="wu-tag" style="color:' + tc.fg + ';background:' + tc.bg + '">' + p.tag + '</span>' +
         '<span class="wu-date">' + p.date + '</span></div>' +
         '<h2>' + p.title + '</h2>' +
         '<div class="wu-desc">' + p.desc + '</div>' +

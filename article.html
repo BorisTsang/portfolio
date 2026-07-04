@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
+<script src="assets/theme.js"></script>
 <style>
 .art-wrap{max-width:var(--measure-read);margin:0 auto;padding:var(--s-8) var(--section-x) var(--s-10);}
 .art-back{text-decoration:none;font:600 var(--t-xs)/1 'IBM Plex Mono',monospace;color:var(--ink-2);display:inline-flex;align-items:center;gap:var(--s-2);margin-bottom:var(--s-7);animation:heroIn .5s ease both;transition:color .2s;}
@@ -52,7 +53,7 @@
 <body>
 
 <nav class="nav">
-  <a class="nav-brand" href="index.html"><b>Boris Tsang</b><span>/ writeups</span></a>
+  <a class="nav-brand" href="/"><b>Boris Tsang</b><span>/ writeups</span></a>
   <div class="nav-links">
     <a href="index.html#about">About</a>
     <a href="index.html#project">Projects</a>
@@ -69,19 +70,13 @@
   </div>
 </div>
 
-<script src="assets/theme.js"></script>
 <script src="assets/markdown.js"></script>
 <script src="writeups/posts.js"></script>
 <script>
 (function () {
-  var tagColors = window.TAG_COLORS;
-
-  function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
-
   function tagStyle(tag) {
-    var tc = tagColors[tag] || tagColors.misc;
-    var dark = isDark();
-    return 'color:' + (dark ? tc.dfg : tc.lfg) + ';background:' + (dark ? tc.dbg : tc.lbg) + ';';
+    var tc = window.tagColor(tag);
+    return 'color:' + tc.fg + ';background:' + tc.bg + ';';
   }
 
   function slug() {
@@ -103,7 +98,6 @@
       '<div class="art-body"><div class="art-meta">' +
         '<span class="art-tag" style="' + tagStyle(meta.tag) + '">' + (meta.tag || '') + '</span>' +
         '<span class="art-mono">' + (meta.date || '') + '</span>' +
-        (meta.read ? '<span class="art-dot">·</span><span class="art-mono">' + meta.read + '</span>' : '') +
       '</div>' +
       '<h1 class="art-h1">' + (meta.title || 'Untitled') + '</h1>' +
       '<div class="art-ctf"><span class="dot"></span>' + (meta.ctf || '') + '</div>' +

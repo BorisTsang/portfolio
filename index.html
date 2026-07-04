@@ -11,150 +11,19 @@
 <meta property="og:description" content="Portfolio of Boris Tsang — full-stack, embedded systems, game dev, and security. Based in Hong Kong.">
 <meta property="og:image" content="og-image.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Boris Tsang — Full-stack, Embedded, Game Dev, Security">
+<meta name="twitter:description" content="Portfolio of Boris Tsang — full-stack, embedded systems, game dev, and security. Based in Hong Kong.">
+<meta name="twitter:image" content="og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
-<style>
-/* ── Home-only animations & layout (on the shared token grid) ──────── */
-@keyframes blinkCursor{0%,49%{opacity:1;}50%,100%{opacity:0;}}
-@keyframes floatOrb{0%,100%{transform:translateY(0px);}50%{transform:translateY(-20px);}}
-@keyframes zoomReveal{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
-@keyframes revealLeft{from{opacity:0;transform:translateX(-40px);}to{opacity:1;transform:translateX(0);}}
-@keyframes nowPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.7);}}
-@keyframes gridDrift{from{background-position:0 0;}to{background-position:26px 26px;}}
-
-/* Hero — generous top space, content and terminal share the measure grid */
-.hero{
-  padding:var(--s-10) var(--section-x) var(--s-9);
-  display:grid;grid-template-columns:1.05fr .95fr;gap:var(--s-8);align-items:center;
-  position:relative;max-width:1200px;margin:0 auto;
-}
-/* Effect layers bleed full-viewport-width so the glow / dot-grid reach the
-   page edges, while the hero content stays capped at the measure. */
-.hero-dots,.hero-grid,.hero-orbs,.hero-spot{
-  position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);
-  pointer-events:none;
-}
-.hero-dots{background-image:radial-gradient(light-dark(#d6d4ce,#242a33) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);opacity:.4;animation:gridDrift 20s linear infinite;}
-.hero-grid{background-image:radial-gradient(var(--accent) 1.5px,transparent 1.5px);background-size:26px 26px;opacity:0;transition:opacity .5s ease;-webkit-mask-image:radial-gradient(300px circle at 50% 50%,#000 0%,#000 10%,transparent 70%);mask-image:radial-gradient(300px circle at 50% 50%,#000 0%,#000 10%,transparent 70%);}
-.hero-orbs{overflow:hidden;}
-.orb{position:absolute;border-radius:50%;background:var(--accent);}
-.orb.a{top:64px;left:8%;width:140px;height:140px;opacity:.08;filter:blur(24px);animation:floatOrb 8s ease-in-out infinite;}
-.orb.b{bottom:32px;right:12%;width:170px;height:170px;opacity:.05;filter:blur(28px);animation:floatOrb 10s ease-in-out infinite 1.2s;}
-.hero-text{position:relative;}
-.hero .eyebrow{animation:heroIn .6s ease both;}
-.name{font:800 var(--t-display)/1.0 Manrope,sans-serif;margin:var(--s-5) 0 0;letter-spacing:-.035em;text-wrap:balance;}
-.name > span{display:block;}
-.subtitle{font:400 var(--t-lg)/1.5 Manrope,sans-serif;color:var(--ink-2);max-width:42ch;margin:var(--s-5) 0 0;animation:heroIn .6s ease .4s both;}
-.nowline{display:flex;align-items:center;gap:var(--s-2);margin-top:var(--s-5);animation:heroIn .6s ease .46s both;}
-.nowdot{width:8px;height:8px;border-radius:50%;background:#34c759;flex:none;animation:nowPulse 2.4s ease-in-out infinite;}
-.now-text{font:500 var(--t-xs)/1 'IBM Plex Mono',monospace;color:var(--ink-2);}
-.herobtns{display:flex;gap:var(--s-3);margin-top:var(--s-7);animation:heroIn .6s ease .5s both;}
-.btn-primary,.btn-ghost{text-decoration:none;font:600 var(--t-sm)/1 Manrope,sans-serif;padding:var(--s-4) var(--s-6);border-radius:100px;display:inline-block;transition:background .25s,color .25s,transform .25s,box-shadow .25s;}
-.btn-primary{color:#fff;background:var(--accent);}
-.btn-primary:hover{background:var(--accent-strong);box-shadow:0 10px 24px rgba(59,111,214,.35);transform:translateY(-2px);}
-.btn-primary:active{transform:scale(.97);}
-.btn-ghost{color:var(--accent);background:var(--accent-soft);}
-.btn-ghost:hover{box-shadow:0 10px 24px rgba(59,111,214,.16);transform:translateY(-2px);}
-.btn-ghost:active{transform:scale(.97);}
-
-.term-wrap{position:relative;animation:heroIn .8s ease .3s both;}
-.term{transform:perspective(1100px);transform-style:preserve-3d;transition:transform .5s cubic-bezier(.16,1,.3,1);background:#1d1d1f;border-radius:var(--radius);box-shadow:0 24px 60px rgba(0,0,0,.28);overflow:hidden;}
-.term-bar{height:38px;display:flex;align-items:center;gap:var(--s-2);padding:0 var(--s-4);background:#2c2c2e;}
-.term-dot{width:11px;height:11px;border-radius:50%;}
-.term-title{font:500 var(--t-2xs)/1 'IBM Plex Mono',monospace;color:#8e8e93;margin-left:var(--s-2);}
-.term-body{padding:var(--s-5);height:400px;overflow-y:auto;}
-.term-body pre{margin:0;white-space:pre-wrap;font:var(--t-xs)/1.75 'IBM Plex Mono',monospace;color:#e8e8ed;}
-.term-cursor{animation:blinkCursor 1s steps(1) infinite;color:#8db2f5;}
-.board{margin:var(--s-4) 0 0;font:var(--t-sm)/1.6 'IBM Plex Mono',monospace;color:#9bb4e0;letter-spacing:4px;}
-.board-move{font:var(--t-2xs)/1 'IBM Plex Mono',monospace;color:#8e8e93;margin-top:var(--s-3);}
-.board-soon{font:var(--t-2xs)/1.7 'IBM Plex Mono',monospace;color:#5b5b60;margin-top:var(--s-4);}
-
-/* Section label = shared eyebrow token */
-.sec-label{font:600 var(--t-xs)/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);}
-.reveal-up{animation:revealUp linear both;animation-timeline:view();animation-range:cover 0% cover 32%;}
-.reveal-left{animation:revealLeft linear both;animation-timeline:view();animation-range:cover 0% cover 32%;}
-
-/* About — sidebar label + content, aligned baselines */
-.about-row{display:grid;grid-template-columns:120px 1fr;gap:var(--s-8);max-width:var(--measure);margin:0 auto;}
-.about-lead{font:500 var(--t-h3)/1.45 Manrope,sans-serif;letter-spacing:-.01em;color:var(--ink);margin:0 0 var(--s-6);text-wrap:balance;}
-.about-path{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2);margin:0 0 var(--s-7);font:500 var(--t-xs)/1.6 'IBM Plex Mono',monospace;color:var(--ink-2);}
-.about-path .sep{font:600 var(--t-xs) Manrope,sans-serif;color:var(--ink-3);}
-.about-path .now{color:var(--accent);font-weight:700;}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-6);border-top:1px solid var(--hair);padding-top:var(--s-6);}
-.stat-k{font:600 var(--t-2xs)/1 Manrope,sans-serif;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;}
-.stat-v{font:600 var(--t-body)/1 Manrope,sans-serif;margin-top:var(--s-2);color:var(--ink);}
-
-/* Focus & stack */
-.stack-head{text-align:center;margin-bottom:var(--s-7);}
-.stack-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:var(--s-4);}
-.card{border:1px solid var(--hair);border-radius:var(--radius);background:var(--surface);}
-.domains{padding:var(--s-3) var(--s-5);display:flex;flex-direction:column;justify-content:center;}
-.domain{display:flex;align-items:center;gap:var(--s-4);padding:var(--s-4) var(--s-3);border-radius:var(--radius-sm);margin:0 calc(var(--s-3) * -1);transition:background .25s ease,transform .25s cubic-bezier(.34,1.56,.64,1);}
-.domain:hover{background:var(--hair-2);transform:translateX(4px);}
-.domain span{font:600 var(--t-sm) Manrope,sans-serif;color:var(--ink);}
-.domain svg{stroke:var(--accent);}
-.langs{padding:var(--s-5);display:flex;flex-direction:column;justify-content:center;}
-.langgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2);}
-.lang{display:flex;flex-direction:column;align-items:center;gap:var(--s-2);padding:var(--s-4) var(--s-1);border-radius:var(--radius-sm);transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .25s ease;}
-.lang:hover{transform:translateY(-4px) scale(1.06);background:var(--hair-2);}
-.lang-badge{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 var(--t-2xs) 'IBM Plex Mono',monospace;}
-.lang span{font:600 var(--t-2xs) Manrope,sans-serif;color:var(--ink-2);}
-
-/* Projects */
-.proj-head{text-align:center;max-width:var(--measure);margin:0 auto var(--s-8);}
-.proj-card{max-width:600px;margin:0 auto;text-align:center;border:1px solid var(--hair);border-radius:var(--radius);padding:var(--s-9) var(--s-8);background:var(--surface);transform-origin:top center;animation:zoomReveal linear both;animation-timeline:view();animation-range:cover 5% cover 40%;}
-.proj-icon{width:56px;height:56px;border-radius:14px;background:var(--hair-2);display:flex;align-items:center;justify-content:center;margin:0 auto var(--s-5);}
-.proj-title{font:700 var(--t-h3)/1.2 Manrope,sans-serif;letter-spacing:-.02em;margin-bottom:var(--s-3);color:var(--ink);}
-.proj-desc{font:400 var(--t-body)/1.6 Manrope,sans-serif;color:var(--ink-2);max-width:44ch;margin:0 auto var(--s-6);}
-.proj-btn{text-decoration:none;display:inline-flex;align-items:center;gap:var(--s-2);font:600 var(--t-sm)/1 Manrope,sans-serif;color:#fff;background:var(--accent);padding:var(--s-3) var(--s-5);border-radius:100px;transition:background .25s,box-shadow .25s,transform .25s;}
-.proj-btn:hover{background:var(--accent-strong);box-shadow:0 10px 24px rgba(59,111,214,.3);transform:translateY(-2px);}
-
-/* Recent writeups */
-.wu-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:var(--s-6);}
-.wu-all{text-decoration:none;font:600 var(--t-sm)/1 Manrope,sans-serif;color:var(--accent);transition:color .2s;}
-.wu-all:hover{color:var(--ink);}
-.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);}
-.wcard{text-decoration:none;color:inherit;display:block;padding:var(--s-5);border:1px solid var(--hair);border-radius:var(--radius);background:var(--surface);transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .35s ease,border-color .35s ease;}
-.wcard:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.1);}
-.wcard-meta{display:flex;align-items:center;gap:var(--s-3);margin-bottom:var(--s-4);}
-.wcard-tag{font:600 var(--t-2xs) 'IBM Plex Mono',monospace;padding:var(--s-1) var(--s-3);border-radius:6px;}
-.wcard-date{font:var(--t-2xs) 'IBM Plex Mono',monospace;color:var(--ink-3);}
-.wcard-title{min-height:2.6em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font:700 var(--t-lg)/1.3 Manrope,sans-serif;letter-spacing:-.01em;color:var(--ink);}
-.wcard-foot{display:flex;align-items:center;justify-content:space-between;margin-top:var(--s-5);padding-top:var(--s-4);border-top:1px solid var(--hair);}
-.wcard-ctf{font:var(--t-2xs) 'IBM Plex Mono',monospace;color:var(--ink-3);}
-.wcard-arrow{color:var(--ink-3);font:var(--t-sm) Manrope,sans-serif;display:inline-block;transition:transform .3s cubic-bezier(.34,1.56,.64,1),color .3s ease;}
-.wcard:hover .wcard-arrow{transform:translateX(5px);color:var(--accent);}
-
-.center920{max-width:var(--measure);margin:0 auto;}
-.txt-center{text-align:center;}
-
-/* letterized spans (cursor repel) */
-.ltr{display:inline-block;transition:transform .2s cubic-bezier(.34,1.56,.64,1),color .2s ease;cursor:default;}
-.ltr-word{display:inline-block;white-space:nowrap;}
-
-@media(max-width:900px){
-  .stack-grid{grid-template-columns:1fr;}
-  .wgrid{grid-template-columns:1fr;}
-}
-@media(max-width:820px){
-  .hero{grid-template-columns:1fr;padding:var(--s-8) var(--section-x) var(--s-8);gap:var(--s-7);}
-  .name{font-size:56px;letter-spacing:-.03em;}
-  .about-row{grid-template-columns:1fr;gap:var(--s-4);}
-  .stats{gap:var(--s-4);}
-}
-@media(max-width:520px){
-  .nav-links a[data-nav]{display:none;}
-  .herobtns{flex-direction:column;align-items:stretch;}
-  .herobtns a{text-align:center;}
-  .name{font-size:44px;}
-}
-</style>
+<link rel="stylesheet" href="assets/home.css">
+<script src="assets/theme.js"></script>
 </head>
 <body>
 
 <nav class="nav">
-  <a class="nav-brand" href="#top"><b>Boris Tsang</b></a>
+  <a class="nav-brand" href="/"><b>Boris Tsang</b></a>
   <div class="nav-links">
     <a data-nav href="#about">About</a>
     <a data-nav href="#project">Projects</a>
@@ -164,12 +33,13 @@
   </div>
 </nav>
 
-<div id="top" class="hero" id="hero">
+<header id="top" class="hero">
   <div class="hero-dots"></div>
   <div class="hero-grid" id="heroGrid"></div>
   <div class="hero-orbs" id="heroOrbs"><div class="orb a"></div><div class="orb b"></div></div>
   <div class="hero-spot" id="heroSpot"></div>
 
+  <div class="hero-inner">
   <div class="hero-text">
     <div class="eyebrow" data-letterize>Software · Hardware · Games · Security</div>
     <h1 class="name">
@@ -179,7 +49,7 @@
     <p class="subtitle" data-letterize>Hong Kong. Full-stack, embedded, game dev, security. I learn quickly, and I never really stop.</p>
     <div class="nowline">
       <span class="nowdot"></span>
-      <span class="now-text" data-letterize>Now — learning Rust &amp; building a terminal game.</span>
+      <span class="now-text" data-letterize>Now — learning Rust &amp; agentic workflow.</span>
     </div>
     <div class="herobtns">
       <a class="btn-primary" href="#project">View projects</a>
@@ -205,9 +75,15 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
 
-<div id="about" class="section">
+  <a class="scroll-cue" href="#about" aria-label="Scroll to About">
+    <span>scroll</span>
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+  </a>
+</header>
+
+<section id="about" class="section">
   <div class="about-row">
     <div class="sec-label reveal-left" style="padding-top:.4em">About</div>
     <div>
@@ -216,6 +92,7 @@
         <span>Scratch</span><span class="sep">›</span>
         <span>Unity &amp; C#</span><span class="sep">›</span>
         <span>JS / HTML / CSS</span><span class="sep">›</span>
+        <span>Python</span><span class="sep">›</span>
         <span>Cybersecurity</span><span class="sep">›</span>
         <span class="now">Rust, now</span>
       </div>
@@ -226,19 +103,19 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div id="stack" class="section">
+<section id="stack" class="section">
   <div class="center920">
     <div class="sec-label txt-center reveal-up stack-head">Focus &amp; stack</div>
-    <div class="stack-grid reveal-up">
+    <div class="stack-grid scroll-scale">
       <div class="card domains" id="domains"></div>
       <div class="card langs"><div class="langgrid" id="langs"></div></div>
     </div>
   </div>
-</div>
+</section>
 
-<div id="project" class="section">
+<section id="project" class="section">
   <div class="sec-label txt-center reveal-up proj-head">Projects</div>
   <div class="proj-card">
     <div class="proj-icon">
@@ -248,9 +125,9 @@
     <p class="proj-desc">Most of what I've shipped so far has been commissioned or private. I'm packaging up new projects to share here — in the meantime, my GitHub has the rest.</p>
     <a class="proj-btn" href="https://github.com/BorisTsang" target="_blank"><img src="https://cdn.simpleicons.org/github/ffffff" alt="" style="width:16px;height:16px">Visit my GitHub</a>
   </div>
-</div>
+</section>
 
-<div id="writeups" class="section">
+<section id="writeups" class="section">
   <div class="center920 reveal-up">
     <div class="wu-top">
       <div class="sec-label">Writeups</div>
@@ -258,19 +135,19 @@
     </div>
     <div class="wgrid" id="recent"></div>
   </div>
-</div>
+</section>
 
-<div class="contact" id="contact">
+<footer class="contact" id="contact">
   <div class="contact-label">Contact</div>
   <div class="contact-icons">
     <a href="https://github.com/BorisTsang" target="_blank" title="GitHub"><img src="https://cdn.simpleicons.org/github/3b6fd6" alt="GitHub" style="width:22px;height:22px"></a>
     <a href="https://x.com/BorisTsang622" target="_blank" title="X"><img src="https://cdn.simpleicons.org/x/3b6fd6" alt="X" style="width:20px;height:20px"></a>
+    <a href="https://discord.com/users/1297489493238222981" target="_blank" title="Discord"><img src="https://cdn.simpleicons.org/discord/3b6fd6" alt="Discord" style="width:22px;height:22px"></a>
     <a href="mailto:boris@boristsang.com" title="Email"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3b6fd6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></a>
   </div>
   <div class="contact-copy">© 2026 Boris Tsang · Hong Kong</div>
-</div>
+</footer>
 
-<script src="assets/theme.js"></script>
 <script src="writeups/posts.js"></script>
 <script src="assets/home.js"></script>
 </body>

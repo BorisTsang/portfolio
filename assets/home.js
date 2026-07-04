@@ -13,14 +13,12 @@
     { label: 'C#', mono: 'C#', bg: '#8b5cf6', fg: '#fff' },
     { label: 'TypeScript', mono: 'TS', bg: '#3178c6', fg: '#fff' },
     { label: 'JavaScript', mono: 'JS', bg: '#f0db4f', fg: '#1d1d1f' },
-    { label: 'HTML/CSS', mono: '</>', bg: '#e34f26', fg: '#fff' },
+    { label: 'HTML/CSS', mono: '&lt;/&gt;', bg: '#e34f26', fg: '#fff' }, // pre-escaped: rendered via innerHTML
     { label: 'Python', mono: 'PY', bg: '#4b8bbe', fg: '#fff' },
     { label: 'PHP', mono: 'PHP', bg: '#8892bf', fg: '#fff' },
     { label: 'C++', mono: 'C++', bg: '#00599c', fg: '#fff' },
     { label: 'Rust', mono: 'RS', bg: '#b7410e', fg: '#fff' }
   ];
-
-  function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
 
   // ── Letter-ize: wrap each character in a .ltr span for cursor repel ──
   var letters = [];
@@ -64,37 +62,9 @@
     });
   }
 
-  // ── Smooth scroll for in-page nav/hero anchors ──────────────────────
-  function animateScrollTo(target) {
-    var start = window.scrollY;
-    var dist = target - start;
-    var dur = Math.min(900, Math.max(350, Math.abs(dist) * 0.6));
-    var t0 = performance.now();
-    var ease = function (p) { return 1 - Math.pow(1 - p, 3); };
-    function step(now) {
-      var p = Math.min(1, (now - t0) / dur);
-      window.scrollTo(0, start + dist * ease(p));
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
   document.addEventListener('DOMContentLoaded', function () {
-    // Letterize hero text
+    // Letterize hero text (same-page anchor scrolling lives in theme.js)
     document.querySelectorAll('[data-letterize]').forEach(letterize);
-
-    // Smooth-scroll anchors (about/project/contact/top). #contact is handled
-    // in theme.js too, but this covers the rest and the hero buttons.
-    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        var id = a.getAttribute('href').slice(1);
-        var el = document.getElementById(id);
-        if (!el) return;
-        e.preventDefault();
-        var off = id === 'top' ? 0 : 80;
-        animateScrollTo(Math.max(0, el.getBoundingClientRect().top + window.scrollY - off));
-      });
-    });
 
     // Hero pointer interactions
     var hero = document.getElementById('top');
@@ -108,7 +78,7 @@
     var resetHero = function () {
       spot.style.background = '';
       grid.style.opacity = '0';
-      orbs.style.transform = 'translate(0,0)';
+      orbs.style.transform = '';
       term.style.transition = 'transform .5s cubic-bezier(.16,1,.3,1)';
       term.style.transform = 'perspective(1100px)';
       letters.forEach(function (el) {
@@ -139,11 +109,11 @@
       var lr = spot.getBoundingClientRect();
       var lx = ((e.clientX - lr.left) / lr.width * 100).toFixed(1);
       var ly = ((e.clientY - lr.top) / lr.height * 100).toFixed(1);
-      spot.style.background = 'radial-gradient(460px circle at ' + lx + '% ' + ly + '%, rgba(59,111,214,0.32), rgba(59,111,214,0.16) 20%, rgba(59,111,214,0.06) 42%, transparent 66%)';
+      spot.style.background = 'radial-gradient(260px circle at ' + lx + '% ' + ly + '%, rgba(59,111,214,0.26), rgba(59,111,214,0.12) 22%, rgba(59,111,214,0.05) 45%, transparent 68%)';
       grid.style.opacity = '1';
-      var m = 'radial-gradient(320px circle at ' + lx + '% ' + ly + '%, #000 0%, #000 8%, transparent 66%)';
+      var m = 'radial-gradient(230px circle at ' + lx + '% ' + ly + '%, #000 0%, #000 8%, transparent 66%)';
       grid.style.webkitMaskImage = m; grid.style.maskImage = m;
-      orbs.style.transform = 'translate(' + ((px - 0.5) * 40).toFixed(1) + 'px,' + ((py - 0.5) * 40).toFixed(1) + 'px)';
+      orbs.style.transform = 'translate(' + ((px - 0.5) * 56).toFixed(1) + 'px,' + ((py - 0.5) * 56).toFixed(1) + 'px)';
       term.style.transition = 'transform .1s ease-out';
       term.style.transform = 'perspective(1100px) rotateX(' + (-(py - 0.5) * 9).toFixed(2) + 'deg) rotateY(' + ((px - 0.5) * 11).toFixed(2) + 'deg)';
       moveLetters(e.clientX, e.clientY);
@@ -203,28 +173,28 @@
     }
 
     // ── Stack section ─────────────────────────────────────────────────
+    // Each row/tile carries a --i index for a staggered scroll-reveal, and
+    // language tiles carry their own --c colour so the hover glow is tinted
+    // to that language rather than the generic accent.
     var domainsEl = document.getElementById('domains');
-    domainsEl.innerHTML = DOMAINS.map(function (d) {
-      return '<div class="domain"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#3b6fd6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none">' + d.icon + '</svg><span>' + d.label + '</span></div>';
+    domainsEl.innerHTML = DOMAINS.map(function (d, i) {
+      return '<div class="domain" style="--i:' + i + '"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none">' + d.icon + '</svg><span>' + d.label + '</span></div>';
     }).join('');
 
     var langsEl = document.getElementById('langs');
-    langsEl.innerHTML = LANGS.map(function (l) {
-      return '<div class="lang"><div class="lang-badge" style="background:' + l.bg + ';color:' + l.fg + '">' + l.mono + '</div><span>' + l.label + '</span></div>';
+    langsEl.innerHTML = LANGS.map(function (l, i) {
+      return '<div class="lang" style="--i:' + i + ';--c:' + l.bg + '">' +
+        '<div class="lang-badge" style="background:' + l.bg + ';color:' + l.fg + '">' + l.mono + '</div>' +
+        '<span>' + l.label + '</span></div>';
     }).join('');
 
     // ── Recent writeups (first 2 from manifest) ───────────────────────
     var recentEl = document.getElementById('recent');
-    var tagColors = window.TAG_COLORS;
-    function tagStyle(tag) {
-      var tc = tagColors[tag] || tagColors.misc;
-      var dark = isDark();
-      return 'color:' + (dark ? tc.dfg : tc.lfg) + ';background:' + (dark ? tc.dbg : tc.lbg) + ';';
-    }
     function renderRecent() {
-      recentEl.innerHTML = (window.POSTS || []).slice(0, 2).map(function (p) {
-        return '<a class="wcard" href="article.html?slug=' + encodeURIComponent(p.slug) + '">' +
-          '<div class="wcard-meta"><span class="wcard-tag" style="' + tagStyle(p.tag) + '">' + p.tag + '</span>' +
+      recentEl.innerHTML = (window.POSTS || []).slice(0, 2).map(function (p, i) {
+        var tc = window.tagColor(p.tag);
+        return '<a class="wcard" style="--i:' + i + ';--tc:' + tc.fg + '" href="article.html?slug=' + encodeURIComponent(p.slug) + '">' +
+          '<div class="wcard-meta"><span class="wcard-tag" style="color:' + tc.fg + ';background:' + tc.bg + '">' + p.tag + '</span>' +
           '<span class="wcard-date">' + p.date + '</span></div>' +
           '<div class="wcard-title">' + p.title + '</div>' +
           '<div class="wcard-foot"><span class="wcard-ctf">' + p.ctf + '</span><span class="wcard-arrow">&rarr;</span></div>' +
