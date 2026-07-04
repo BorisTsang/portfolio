@@ -71,13 +71,13 @@
   text-decoration:none;color:var(--ink-3);
   animation:heroIn .6s ease 1.1s both;transition:opacity .4s ease,color .25s ease;
 }
-/* letter-spacing appends a phantom gap after the last letter, so the span's
-   box is wider on the right than the glyphs — flex-centering it then leaves
-   the visible word sitting left of the arrow. Cancel that trailing gap with a
-   negative right margin so the glyphs themselves center under the arrow. */
+/* letter-spacing appends a phantom gap only after the LAST letter, making the
+   span's box lopsided (extra space on the right). Flex-centering that box then
+   pushes the visible word right of center. Add an equal padding-left to restore
+   symmetry so the glyph center lines up with the box center — and the arrow. */
 .scroll-cue span{
   font:600 10px Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;
-  margin-right:-.24em;
+  padding-left:.24em;
 }
 .scroll-cue:hover{color:var(--accent);}
 .scroll-cue svg{animation:cueBob 1.8s ease-in-out infinite;}
