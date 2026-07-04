@@ -151,4 +151,11 @@ a:focus-visible,button:focus-visible{
 }
 @media(max-width:640px){
   :root{--section-x:22px;}
+  /* Mobile nav: the full link row + "/ writeups" brand suffix overflow the
+     56px bar and wrap uglily. Collapse to just the brand (home link) and the
+     theme toggle; keep one primary link (marked .nav-primary) on pages that
+     have one. */
+  .nav-brand span{display:none;}
+  .nav-links{gap:var(--s-4);}
+  .nav-links a:not(.nav-primary),.nav-links .active:not(.nav-primary){display:none;}
 }

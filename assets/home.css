@@ -69,8 +69,14 @@
   position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:var(--s-1);
   text-decoration:none;color:var(--ink-3);
-  font:600 10px Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;
   animation:heroIn .6s ease 1.1s both;transition:opacity .4s ease,color .25s ease;
+}
+/* Letter-spacing adds a trailing gap after the last letter, shoving the word
+   left of the column's center. Pad the left by one step to recenter the text
+   under the arrow. */
+.scroll-cue span{
+  font:600 10px Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;
+  padding-left:.24em;
 }
 .scroll-cue:hover{color:var(--accent);}
 .scroll-cue svg{animation:cueBob 1.8s ease-in-out infinite;}
@@ -186,7 +192,6 @@ html.scrolled .scroll-cue{opacity:0;pointer-events:none;}
   .stats{gap:var(--s-4);}
 }
 @media(max-width:520px){
-  .nav-links a[data-nav]{display:none;}
   .herobtns{flex-direction:column;align-items:stretch;}
   .herobtns a{text-align:center;}
   .name{font-size:44px;}
